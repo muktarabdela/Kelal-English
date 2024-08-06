@@ -50,3 +50,13 @@ export const getUserWithProgress = async (id) => {
         console.log(error);
     }
 };
+
+export const textToSpeech = async (text) => {
+    const token = getToken();
+    try {
+        const response = await instance.post('/test-to-speech', text,);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}

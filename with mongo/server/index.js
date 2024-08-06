@@ -4,15 +4,20 @@ const connectDB = require('./config/db')
 const cors = require('cors');
 const app = express()
 const port = process.env.PORT || 5000
+
+
 // connect database
 connectDB()
 
 // enable cors
 app.use(cors());
 
+
 // importing routes
 const studentRoute = require('./router/studentRoute')
 const supperAdminRoute = require('./router/superAdminRoute');
+const testToSpeechRouter = require('./router/testToSpeechRoute');
+
 app.use(express.json())
 
 app.get('/', (req, res) => {
@@ -22,5 +27,6 @@ app.get('/', (req, res) => {
 // user routes
 app.use('/kelal/api', studentRoute)
 app.use('/kelal/api', supperAdminRoute)
+app.use('/kelal/api', testToSpeechRouter)
 
 app.listen(port, () => console.log(`server on port ${port}!`))

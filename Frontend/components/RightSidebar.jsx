@@ -35,7 +35,7 @@ const RightSidebar = () => {
     }
 
     return (
-        <div className="fixed right-0 top-[7.9em] w-[18em] h-full bg-white rounded-xl border border-gray-200 shadow-lg p-4 space-y-6">
+        <div className="fixed right-0 top-[7.9em] w-[18em] h-full bg-white rounded-xl border border-gray-200 shadow-lg p-4 space-y-6 overflow-y-auto">
             <h3 className="text-lg font-bold text-primary mb-4">User Progress</h3>
 
             {/* Current Phase */}
