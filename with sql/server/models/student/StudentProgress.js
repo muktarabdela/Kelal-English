@@ -11,7 +11,7 @@ const studentProgressSchema = new mongoose.Schema({
     sessions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SessionTracking' }],
     lessonsCompleted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Lesson' }],
     interactiveExercisesCompleted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'InteractiveExercise' }],
-    timeSpent: { type: Number, default: 0 } // in seconds
+    timeSpent: { type: Number, default: 0 }
 });
 
 const StudentProgress = mongoose.model("StudentProgress", studentProgressSchema);

@@ -8,49 +8,42 @@ const Phase = require("../models/material/phase");
 const Coin = require("../models/student/Coin");
 const register = async (req, res) => {
     try {
-        // check if user already exists
+        // Check if user already exists
         const alreadyRegistered = await User.findOne({ email: req.body.email });
         if (alreadyRegistered) {
             return res.status(400).json({ message: "Email already exists" });
         }
 
-        // check if phone number already exists 
+        // Check if phone number already exists 
         const phoneExists = await User.findOne({ phone: req.body.phone });
         if (phoneExists) {
             return res.status(400).json({ message: "Phone number already exists" });
         }
+
         // Create the user
         const user = await User.create(req.body);
 
-        // Create/find the initial phase
-        const phase = await Phase.create(
-            { student: user._id, name: 'basic', currentPhase: 1, description: 'description', TotalPhases: 3, durationInWeeks: 4 },
-        );
-
-        // Create/find the initial week
-        const week = await Week.create(
-            { student: user._id, phase: phase._id, currentWeek: 1, overview: 'overview test', objectives: 'objectives test' },
-            // { upsert: true, new: true }
-        );
-
-        // Create/find the initial day
-        const day = await Day.create(
-            { student: user._id, week: week._id, currentDay: 1, title: 'test title', textExplanation: 'textExplanation test' },
-            // { upsert: true, new: true }
-        );
-
         // Create/find the initial coin
-        const coin = await Coin.create(
-            { student: user._id, currentCoin: 0 }
-        )
+        const coin = await Coin.create({
+            student: user._id,
+            currentCoin: 0
+        });
+
+        // Find the initial phase, week, and day
+        const initialPhase = await Phase.findOne({ name: "basic" }); // Replace with your criteria
+        console.log("initialPhase", initialPhase);
+        const initialWeek = await Week.findOne({ phase: initialPhase._id, weekNumber: 1 });
+        console.log("initialWeek", initialWeek);
+        const initialDay = await Day.findOne({ phase: initialPhase._id, week: initialWeek._id, dayNumber: 1 });
+        console.log("initialDay", initialDay);
 
         // Create the initial progress for the user
         await StudentProgress.create({
             student: user._id,
-            currentPhase: phase._id,
-            currentWeek: week._id,
-            currentDay: day._id,
-            coins: coin._id, // or initial value
+            currentPhase: initialPhase._id,
+            currentWeek: initialWeek._id,
+            currentDay: initialDay._id,
+            coins: coin._id,
             achievements: [],
             progress_tracking: [],
             sessions: [],
@@ -66,7 +59,6 @@ const register = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
 // create controller for user login
 const login = async (req, res) => {
     const { email, password } = req.body;
@@ -106,73 +98,100 @@ const getUserWithDetails = async (req, res) => {
 };
 
 // student current phase progress
-const updateCurrentPhase = async (req, res) => {
+const updateStudentCurrentPhase = async (req, res) => {
     try {
         const userId = req.params.id;
         const { currentPhase } = req.body;
         if (!currentPhase) {
-            return res.status(400).json({ message: "Please provide currentPhase" });
+            res.status(400).json({ message: "Please provide currentPhase" });
         }
 
-        let userPhaseProgress = await Phase.findOneAndUpdate(
-            { student: userId },
-            { currentPhase },
-            { new: true, runValidators: true }
-        );
-
-        if (!userPhaseProgress) {
-            return res.status(404).json({ message: "User progress not found" });
+        // Ensure the new phase ID is valid
+        const phase = await Phase.findById(currentPhase);
+        if (!phase) {
+            return res.status(404).json({ message: 'Phase not found' });
         }
 
-        res.status(200).json(userPhaseProgress);
+        // Find the student's progress document
+        const studentProgress = await StudentProgress.findOne({ student: userId });
+        if (!studentProgress) {
+            return res.status(404).json({ message: 'Student progress not found' });
+        }
+
+        // Update the current phase
+        studentProgress.currentPhase = currentPhase;
+
+        // Save the updated document
+        await studentProgress.save();
+
+        res.status(200).json({ message: 'Student current phase updated successfully', studentProgress });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: error.message });
     }
 };
+
 // student current week progress
-const updateCurrentWeek = async (req, res) => {
+const updateStudentCurrentWeek = async (req, res) => {
     try {
         const userId = req.params.id;
         const { currentWeek } = req.body;
+
         if (!currentWeek) {
-            return res.status(400).json({ message: "Please provide currentWeek" });
+            res.status(400).json({ message: "Please provide currentWeek" });
         }
-        let userWeekProgress = await Week.findOneAndUpdate(
-            { student: userId },
-            { currentWeek },
-            { new: true, runValidators: true }
-        );
-
-        if (!userWeekProgress) {
-            return res.status(404).json({ message: "User progress not found" });
+        // Ensure the new week ID is valid
+        const week = await Week.findById(currentWeek);
+        if (!week) {
+            return res.status(404).json({ message: 'Week not found' });
         }
 
-        res.status(200).json(userWeekProgress);
+        // Find the student's progress document
+        const studentProgress = await StudentProgress.findOne({ student: userId });
+        if (!studentProgress) {
+            return res.status(404).json({ message: 'Student progress not found' });
+        }
+
+        // Update the current week
+        studentProgress.currentWeek = currentWeek;
+
+        // Save the updated document
+        await studentProgress.save();
+
+        res.status(200).json({ message: 'Student current week updated successfully', studentProgress });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: error.message });
     }
 };
+
 // student current day progress
-const updateCurrentDay = async (req, res) => {
+const updateStudentCurrentDay = async (req, res) => {
     try {
         const userId = req.params.id;
         const { currentDay } = req.body;
         if (!currentDay) {
-            return res.status(400).json({ message: "Please provide currentDay" });
+            res.status(400).json({ message: "Please provide currentDay" });
         }
-        let userDayProgress = await Day.findOneAndUpdate(
-            { student: userId },
-            { currentDay },
-            { new: true, runValidators: true }
-        );
-
-        if (!userDayProgress) {
-            return res.status(404).json({ message: "User progress not found" });
+        // Ensure the new day ID is valid
+        const day = await Day.findById(currentDay);
+        if (!day) {
+            return res.status(404).json({ message: 'Day not found' });
         }
 
-        res.status(200).json(userDayProgress);
+        // Find the student's progress document
+        const studentProgress = await StudentProgress.findOne({ student: userId });
+        if (!studentProgress) {
+            return res.status(404).json({ message: 'Student progress not found' });
+        }
+
+        // Update the current day
+        studentProgress.currentDay = currentDay;
+
+        // Save the updated document
+        await studentProgress.save();
+
+        res.status(200).json({ message: 'Student current day updated successfully', studentProgress });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: error.message });
@@ -247,5 +266,5 @@ const getUserWithProgress = async (req, res) => {
     }
 };
 
-module.exports = { register, login, getUserWithDetails, getUserWithProgress, updateCurrentPhase, updateCurrentWeek, updateCurrentDay, updateCoins };
+module.exports = { register, login, getUserWithDetails, getUserWithProgress, updateStudentCurrentPhase, updateStudentCurrentWeek, updateStudentCurrentDay, updateCoins };
 

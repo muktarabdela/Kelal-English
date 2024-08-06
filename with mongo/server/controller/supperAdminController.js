@@ -4,6 +4,9 @@ const Achievement = require("../models/student/Achievement");
 const Batch = require("../models/student/Batch");
 const SuperAdmin = require("../models/superAdmin");
 const User = require("../models/student/studentModel");
+const Phase = require("../models/material/phase");
+const Day = require("../models/material/day");
+const Week = require("../models/material/week");
 
 const register = async (req, res) => {
     try {
@@ -128,5 +131,37 @@ const addBatchForUser = async (req, res) => {
     }
 };
 
-module.exports = { register, login, addBatch, addAchievements, updateSubscription, addBatchForUser }
+// add controller for adding phase
+const addPhase = async (req, res) => {
+    try {
+        const phase = await Phase.create(req.body);
+        res.status(201).json({ message: "phase add ", phase });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
+// add controller for adding weeks
+const addWeeks = async (req, res) => {
+    try {
+        const week = await Week.create(req.body);
+        res.status(201).json({ message: "week add ", week });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+// add controller for adding days
+const addDays = async (req, res) => {
+    try {
+        const day = await Day.create(req.body);
+        res.status(201).json({ message: "day add ", day });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
+module.exports = { register, login, addBatch, addAchievements, updateSubscription, addBatchForUser, addPhase, addWeeks, addDays };
 
