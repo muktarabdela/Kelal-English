@@ -14,6 +14,7 @@ const WeekDetailsPage = () => {
     const user = useSelector((state) => state.ui.user);
     const slug = user?.userId;
     const { userDataLoading, error, userProgressData: userData } = useSelector((state) => state.user);
+    console.log("from days detail", userData);
 
     useEffect(() => {
         if (slug) {
@@ -92,12 +93,8 @@ const WeekDetailsPage = () => {
         ],
     };
 
-    const handleDayClick = (dayId, isLocked) => {
-        if (!isLocked && dayId !== undefined) {
-            router.push(`/learn/${phase}/${week}/${dayId}`);
-        } else {
-            alert("Please complete the previous week to unlock this one");
-        }
+    const handleDayClick = (dayId) => {
+        router.push(`/learn/${phase}/${week}/${dayId}`);
     };
 
     return (
@@ -108,34 +105,28 @@ const WeekDetailsPage = () => {
             <div id="webcrumbs" className="min-h-[500px] bg--50">
                 <div className="grid grid-cols-3 gap-4 p-4">
                     {data.days.map((day, index) => {
-                        const isLocked = day.dayNumber > userData?.currentDay;
+                        const isLocked = day.dayNumber > userData?.currentDay.dayNumber;
                         return (
-                            <div className={`relative rounded-lg border-2 w- ${isLocked ? 'border-gray-500 opacity-50' : 'border-blue-500 cursor-pointer transition-transform transform hover:scale-105 w-full'}`}>
-                                <div onClick={() => handleDayClick(day._id, isLocked)}
-                                    key={index} className="bg-neutral-50 rounded-md p-4 flex flex-col shadow">
-                                    <div className={`${isLocked ? 'bg-gray-500' : 'bg-blue-500'} absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full text-white px-4 py-1 whitespace-nowrap text-sm`}>
-                                        {isLocked ? 'Locked' : `Open Week`}
+                            <div key={index} className="bg-neutral-50 rounded-md p-4 flex flex-col shadow">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <div className="text-lg font-title">{day.title}</div>
+                                        <div className="bg-green-100 text-green-700 text-xs font-semibold rounded-full px-2 inline-block">Admin</div>
                                     </div>
-                                    <div className="flex items-center justify-between">
-                                        <div>
-                                            <div className="text-md font-title">{day.title}</div>
-                                        </div>
-                                        <p className="w-[60px] h-[60px] rounded-full object-cover"  >
-                                            Day {day.dayNumber}
-                                        </p>
-                                    </div>
-                                    <div className="mt-2 text-sm">{day.description}</div>
-                                    <div className="border-t border-neutral-200 mt-4 pt-4 flex justify-between items-center">
-                                        <button className="flex items-center text-primary">
-                                            <span className="material-symbols-outlined mr-1">email</span>Email
-                                        </button>
-                                        <button className="flex items-center text-primary">
-                                            <span className="material-symbols-outlined mr-1">call</span>Call
-                                        </button>
-                                    </div>
+                                    <p className="w-[60px] h-[60px] rounded-full object-cover"  >
+                                        Day {day.dayNumber}
+                                    </p>
+                                </div>
+                                <div className="mt-2 text-sm">{day.description}</div>
+                                <div className="border-t border-neutral-200 mt-4 pt-4 flex justify-between items-center">
+                                    <button className="flex items-center text-primary">
+                                        <span className="material-symbols-outlined mr-1">email</span>Email
+                                    </button>
+                                    <button className="flex items-center text-primary">
+                                        <span className="material-symbols-outlined mr-1">call</span>Call
+                                    </button>
                                 </div>
                             </div>
-
                         )
                     })}
                 </div>

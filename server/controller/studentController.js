@@ -24,35 +24,13 @@ const register = async (req, res) => {
         // Create the user
         const user = await User.create(req.body);
 
-        // Create/find the initial phase
-        const phase = await Phase.create(
-            { student: user._id, name: 'basic', currentPhase: 1, description: 'description', TotalPhases: 3, durationInWeeks: 4 },
-        );
-
-        // Create/find the initial week
-        const week = await Week.create(
-            { student: user._id, phase: phase._id, currentWeek: 1, overview: 'overview test', objectives: 'objectives test' },
-            // { upsert: true, new: true }
-        );
-
-        // Create/find the initial day
-        const day = await Day.create(
-            { student: user._id, week: week._id, currentDay: 1, title: 'test title', textExplanation: 'textExplanation test' },
-            // { upsert: true, new: true }
-        );
-
-        // Create/find the initial coin
-        const coin = await Coin.create(
-            { student: user._id, currentCoin: 0 }
-        )
-
         // Create the initial progress for the user
         await StudentProgress.create({
             student: user._id,
-            currentPhase: phase._id,
-            currentWeek: week._id,
-            currentDay: day._id,
-            coins: coin._id, // or initial value
+            currentPhase: 1,
+            currentWeek: 1,
+            currentDay: 1,
+            coins: 1, // or initial value
             achievements: [],
             progress_tracking: [],
             sessions: [],
@@ -117,11 +95,6 @@ const getUserWithProgress = async (req, res) => {
         if (!userProgress) {
             return res.status(404).json({ message: "User not found" });
         }
-        // userProgress = await userProgress.populate('student')
-        userProgress = await userProgress.populate('currentPhase')
-        userProgress = await userProgress.populate('currentWeek')
-        userProgress = await userProgress.populate('currentDay')
-        userProgress = await userProgress.populate('coins')
         if (userProgress.achievements && userProgress.achievements.length > 0) {
             userProgress = await userProgress.populate('achievements')
         }
@@ -150,22 +123,44 @@ const getUserWithProgress = async (req, res) => {
 // create controller for get student daily lessons
 const getStudentDailyLessons = async (req, res) => {
     try {
-        const dayId = req.params.id;
-        if (!dayId) {
-            return res.status(400).json({ message: "Please provide DayId" });
+        const userId = req.params.id;
+
+        if (!userId) {
+            return res.status(400).json({ message: "Please provide userId" });
         }
 
-        const lessons = await Lesson.find({ day: dayId })
-        if (!lessons) {
-            return res.status(404).json({ message: "Lessons not found" });
+        // Find the student's progress
+        const studentProgress = await StudentProgress.findOne({ student: userId });
+
+        if (!studentProgress) {
+            return res.status(404).json({ message: "Student progress not found" });
         }
 
-        res.status(200).json(lessons);
+        const { currentPhase, currentWeek, currentDay } = studentProgress;
+        // Find all lessons and populate day, phase, and week references
+        const lessons = await Lesson.find({})
+            .populate('day')
+            .populate('phase')
+            .populate('week');
+
+        // Filter lessons that match the student's current phase, week, and day
+        const matchingLessons = lessons.filter(lesson => {
+            return lesson.phase.phaseNumber.toString() === currentPhase.toString() &&
+                lesson.week.weekNumber.toString() === currentWeek.toString() &&
+                lesson.day.dayNumber.toString() === currentDay.toString();
+        });
+
+        if (matchingLessons.length === 0) {
+            return res.status(404).json({ message: "No matching lessons found" });
+        }
+
+        res.status(200).json(matchingLessons);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: error.message });
     }
 };
+
 // get student interactive exercise by lesson id
 const getStudentInteractiveExercise = async (req, res) => {
     try {
@@ -194,7 +189,7 @@ const updateStudentCurrentPhase = async (req, res) => {
             return res.status(400).json({ message: "Please provide currentPhase" });
         }
 
-        let userPhaseProgress = await Phase.findOneAndUpdate(
+        let userPhaseProgress = await StudentProgress.findOneAndUpdate(
             { student: userId },
             { currentPhase },
             { new: true, runValidators: true }
@@ -218,12 +213,11 @@ const updateStudentCurrentWeek = async (req, res) => {
         if (!currentWeek) {
             return res.status(400).json({ message: "Please provide currentWeek" });
         }
-        let userWeekProgress = await Week.findOneAndUpdate(
+        let userWeekProgress = await StudentProgress.findOneAndUpdate(
             { student: userId },
             { currentWeek },
             { new: true, runValidators: true }
         );
-
         if (!userWeekProgress) {
             return res.status(404).json({ message: "User progress not found" });
         }
@@ -242,7 +236,7 @@ const updateStudentCurrentDay = async (req, res) => {
         if (!currentDay) {
             return res.status(400).json({ message: "Please provide currentDay" });
         }
-        let userDayProgress = await Day.findOneAndUpdate(
+        let userDayProgress = await StudentProgress.findOneAndUpdate(
             { student: userId },
             { currentDay },
             { new: true, runValidators: true }

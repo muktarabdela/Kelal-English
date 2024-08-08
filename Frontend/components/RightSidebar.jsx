@@ -35,38 +35,38 @@ const RightSidebar = () => {
     }
 
     return (
-        <div className="fixed right-0 top-[7.9em] w-[18em] h-full bg-white rounded-xl border border-gray-200 shadow-lg p-4 space-y-6 overflow-y-auto">
+        <div className="fixed right-0 top-[7.9em] w-[15em] h-full bg-white rounded-xl border border-gray-200 shadow-lg p-4 space-y-6 overflow-y-auto">
             <h3 className="text-lg font-bold text-primary mb-4">User Progress</h3>
 
             {/* Current Phase */}
             <div className="bg-secondary p-4 rounded-lg shadow-sm">
                 <h4 className="text-md font-semibold text-primary mb-2">Current Phase</h4>
-                <p className="text-gray-700"><strong>Name:</strong> {progress?.currentPhase.name}</p>
+                {/* <p className="text-gray-700"><strong>Name:</strong> {progress?.currentPhase.name}</p>
                 <p className="text-gray-700"><strong>Phase:</strong> {progress?.currentPhase.currentPhase} of {progress?.currentPhase.TotalPhases}</p>
-                <p className="text-gray-700"><strong>Description:</strong> {progress?.currentPhase.description}</p>
-                <p className="text-gray-700"><strong>Duration:</strong> {progress?.currentPhase.durationInWeeks} weeks</p>
+                <p className="text-gray-700"><strong>Description:</strong> {progress?.currentPhase.description}</p> */}
+                <p className="text-gray-700"><strong>Duration:</strong> {progress?.currentPhase} weeks</p>
             </div>
 
             {/* Current Week */}
             <div className="bg-secondary p-4 rounded-lg shadow-sm">
                 <h4 className="text-md font-semibold text-primary mb-2">Current Week</h4>
-                <p className="text-gray-700"><strong>Week:</strong> {progress?.currentWeek.currentWeek}</p>
-                <p className="text-gray-700"><strong>Overview:</strong> {progress?.currentWeek.overview}</p>
-                <p className="text-gray-700"><strong>Objectives:</strong> {progress?.currentWeek.objectives}</p>
+                <p className="text-gray-700"><strong>Week:</strong> {progress?.currentWeek}</p>
+                {/* <p className="text-gray-700"><strong>Overview:</strong> {progress?.currentWeek.overview}</p>
+                <p className="text-gray-700"><strong>Objectives:</strong> {progress?.currentWeek.objectives}</p> */}
             </div>
 
             {/* Current Day */}
             <div className="bg-secondary p-4 rounded-lg shadow-sm">
                 <h4 className="text-md font-semibold text-primary mb-2">Current Day</h4>
                 <p className="text-gray-700"><strong>Day:</strong> {progress?.currentDay.currentDay}</p>
-                <p className="text-gray-700"><strong>Title:</strong> {progress?.currentDay.title}</p>
-                <p className="text-gray-700"><strong>Description:</strong> {progress?.currentDay.textExplanation}</p>
+                {/* <p className="text-gray-700"><strong>Title:</strong> {progress?.currentDay.title}</p>
+                <p className="text-gray-700"><strong>Description:</strong> {progress?.currentDay.textExplanation}</p> */}
             </div>
 
             {/* Coins */}
             <div className="bg-secondary p-4 rounded-lg shadow-sm">
                 <h4 className="text-md font-semibold text-primary mb-2">Coins</h4>
-                <p className="text-gray-700"><strong>Total Coins:</strong> {progress?.coins.total_coins}</p>
+                <p className="text-gray-700"><strong>Total Coins:</strong> {progress?.coin}</p>
             </div>
 
             {/* Achievements */}

@@ -77,15 +77,18 @@ const addAchievements = async (req, res) => {
 
 const postStudentDailyLessons = async (req, res) => {
     try {
-        const dayId = req.params.id;
-        if (!dayId) {
-            return res.status(400).json({ message: "Please provide DayId" });
+        // get day week and phase
+        const { dayId, weekId, phaseId } = req.body;
+        if (!dayId || !weekId || !phaseId) {
+            return res.status(400).json({ message: "Please provide dayId, weekId and phaseId" });
         }
 
-        const { mainTopic, grammarTopic, vocabularyTopic, interactiveActivities } = req.body;
+        const { mainTopic, grammarTopic, vocabularyTopic } = req.body;
         // Create a new lesson
         const newLesson = new Lesson({
             day: dayId,
+            week: weekId,
+            phase: phaseId,
             mainTopic,
             grammarTopic,
             vocabularyTopic,

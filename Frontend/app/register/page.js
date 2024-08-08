@@ -16,18 +16,23 @@ export default function Auth() {
                 ) : (
                     <Login />
                 )}
+                <div className="flex items-center my-6">
+                    <div className="flex-grow border-t border-neutral-300"></div>
+                    <span className="mx-2 text-sm"></span>
+                    <div className="flex-grow border-t border-neutral-300"></div>
+                </div>
                 <div className="mt-4 text-center text-sm">
                     {showRegister ? (
                         <>
                             Already have an account?{" "}
-                            <a onClick={() => dispatch(toggleAuthForm())} className="underline cursor-pointer">
+                            <a onClick={() => dispatch(toggleAuthForm())} className=" cursor-pointer text-sm text-primary">
                                 Sign in
                             </a>
                         </>
                     ) : (
                         <>
                             Don't have an account?{" "}
-                            <a onClick={() => dispatch(toggleAuthForm())} className="underline cursor-pointer">
+                            <a onClick={() => dispatch(toggleAuthForm())} className="text-sm text-primary cursor-pointer">
                                 Create account
                             </a>
                         </>

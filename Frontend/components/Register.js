@@ -54,77 +54,72 @@ export default function Register() {
     };
 
     return (
-        <Card className="mx-auto max-w-sm">
-            <CardHeader>
-                <CardTitle className="text-xl">Sign Up</CardTitle>
-                <CardDescription>
-                    Enter your information to create an account
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <form onSubmit={handleSubmit} className="grid gap-4">
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="grid gap-2">
-                            <Label htmlFor="full_name">Full name</Label>
-                            <Input
-                                id="full_name"
-                                placeholder="Max"
-                                value={formData.full_name}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="phone">Phone number</Label>
-                            <Input
-                                id="phone"
-                                placeholder="0918******"
-                                value={formData.phone}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                    </div>
+        <div id="webcrumbs" className="w-[400px] bg-neutral-50 shadow-lg rounded-lg p-8">
+            <div className="flex flex-col items-center">
+                <img src="https://tools-api.webcrumbs.org/image-placeholder/40/40/logo/1" alt="logo" className="w-10 h-10 object-cover rounded-full" />{/* Photo provided by Pexels */}
+            </div>
+            <h1 className="text-2xl font-title text-center mt-4">create new  account</h1>
+            <form onSubmit={handleSubmit} className="mt-8">
+                <div className="grid grid-cols-2 gap-4 mb-4">
                     <div className="grid gap-2">
-                        <Label htmlFor="email">telegram Username</Label>
-                        <Input
-                            id="telegram_username"
-                            type="telegram_username"
-                            placeholder="@username"
-                            value={formData.telegram_username}
+                        <label className="block mb-1 text-sm font-medium" htmlFor="full_name">Full name</label>
+                        <input
+                            id="full_name"
+                            placeholder="Max"
+                            value={formData.full_name}
                             onChange={handleChange}
                             required
-                        />
+                            className="w-full border border-neutral-300 rounded-md px-3 py-2" type="full_name" />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            placeholder="m@example.com"
-                            value={formData.email}
+                        <label className="block mb-1 text-sm font-medium" htmlFor="phone">Phone number</label>
+                        <input
+                            id="phone"
+                            placeholder="0918******"
+                            value={formData.phone}
                             onChange={handleChange}
                             required
-                        />
+
+                            className="w-full border border-neutral-300 rounded-md px-3 py-2" type="phone" />
                     </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="password">Password</Label>
-                        <Input
-                            id="password"
-                            type="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <Button type="submit" className="w-full">
-                        Create an account
-                    </Button>
-                    <Button variant="outline" className="w-full">
-                        Sign up with GitHub
-                    </Button>
-                </form>
-            </CardContent>
-        </Card>
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-1 text-sm font-medium" htmlFor="telegram_username">telegram username </label>
+                    <input
+                        id="telegram_username"
+                        type="telegram_username"
+                        placeholder="@username"
+                        value={formData.telegram_username}
+                        onChange={handleChange}
+                        required
+                        className="w-full border border-neutral-300 rounded-md px-3 py-2" />
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-1 text-sm font-medium" htmlFor="email">Email address</label>
+                    <input
+                        id="email"
+                        type="email"
+                        placeholder="m@example.com"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        className="w-full border border-neutral-300 rounded-md px-3 py-2" />
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-1 text-sm font-medium" htmlFor="password">Password</label>
+                    <input
+                        id="password"
+                        type="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                        className="w-full border border-neutral-300 rounded-md px-3 py-2" />
+                </div>
+                <button type="submit" className="w-full py-2 rounded-md bg-primary text-white font-medium">
+                    Create an account
+                </button>
+
+            </form>
+        </div>
     );
 }

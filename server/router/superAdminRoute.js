@@ -13,13 +13,13 @@ router.post("/super-admin/batch/create", authMiddleware.verifyToken, authMiddlew
 router.put("/super-admin/subscribe/:id", authMiddleware.verifyToken, authMiddleware.checkAdmin, updateSubscription);
 // add batch for user 
 router.put("/super-admin/batch/:id", authMiddleware.verifyToken, authMiddleware.checkAdmin, addBatchForUser);
-// post student daily lessons
-router.post("/super-admin/student/lessons/:id", authMiddleware.verifyToken, authMiddleware.checkAdmin, postStudentDailyLessons);
 // add interactive exercises
 router.post("/super-admin/interactive-exercise/:id", authMiddleware.verifyToken, authMiddleware.checkAdmin, postInteractiveExercise);
 // ጊዛዊ
 // add achievement route
 router.post("/super-admin/achievement/create", authMiddleware.verifyToken, authMiddleware.checkAdmin, addAchievements);
+// post student daily lessons
+router.post("/super-admin/student/add-lessons", authMiddleware.verifyToken, authMiddleware.checkAdmin, postStudentDailyLessons);
 // add phase
 router.post("/super-admin/phase/create", authMiddleware.verifyToken, authMiddleware.checkAdmin, addPhase);
 // add week

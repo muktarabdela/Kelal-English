@@ -19,13 +19,14 @@ const DayDetailsPage = () => {
             dispatch(fetchUserProgress(slug));
         }
     }, [dispatch, slug]);
-
-    const id = progress?.currentDay?._id;
-
+    // console.log("progress", progress)
+    // const id = progress?._id;
+    // console.log("id", id)
     useEffect(() => {
         const fetchDailyLessons = async () => {
             try {
-                const response = await getDailyLesson(id);
+                const response = await getDailyLesson(slug);
+                console.log("lessons", response);
                 const lessonId = response.data[0]._id;
                 setLessons(response.data);
                 if (lessonId) {
@@ -36,10 +37,10 @@ const DayDetailsPage = () => {
                 console.error('Error fetching daily lessons:', error);
             }
         }
-        if (id) {
+        if (slug) {
             fetchDailyLessons();
         }
-    }, [id]);
+    }, [slug]);
 
     const { phase, week, day } = useParams();
 
