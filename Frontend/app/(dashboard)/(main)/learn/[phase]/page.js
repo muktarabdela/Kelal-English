@@ -27,7 +27,7 @@ const PhaseDetailsPage = () => {
             </div>
         )
     }
-
+    console.log("userProgressData", userData)
 
     if (error) {
         return <div>Error: {error}</div>;
@@ -76,7 +76,7 @@ const PhaseDetailsPage = () => {
             </h1>
             <div className="grid grid-cols-2 gap-6">
                 {data.weeks.map((week) => {
-                    const isLocked = week.weekNumber > userData?.currentWeek.currentWeek;
+                    const isLocked = week.weekNumber > userData?.currentWeek.weekNumber;
                     return (
                         <div
                             key={week._id}

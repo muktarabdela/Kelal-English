@@ -1,45 +1,81 @@
 'use client';
-import { textToSpeech } from '@/api/userApi';
-import { Button } from '@/components/ui/button';
-import VoiceInput from '@/components/VoiceInput'; // Assuming VoiceInput is a custom component
+import { getDailyLesson, getInteractiveExercise } from '@/api/lessonApi';
+import InterActive from '@/components/learn/interActive/InterActive';
+import { fetchUserProgress } from '@/store/UserSlice';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const DayDetailsPage = () => {
-    const { phase, week, day } = useParams();
-    const [text, setText] = useState('');
-    const [audioSrc, setAudioSrc] = useState(null);
+    const dispatch = useDispatch();
+    const { userProgressDataLoading, error, userProgressData: progress } = useSelector((state) => state.user);
+    const [lessons, setLessons] = useState([]);
+    const [interactiveExercise, setInteractiveExercise] = useState({});
 
-    const handleGenerateAudio = async () => {
-        try {
-            const response = await textToSpeech({ text });
-            console.log(response);
-            const audioSrc = `data:audio/mp3;base64,${response.data.audioContent}`;
-            setAudioSrc(audioSrc);
-            setText(response.text);
-        } catch (error) {
-            console.error('Error generating audio:', error);
+    const user = useSelector((state) => state.ui.user);
+    const slug = user?.userId;
+    useEffect(() => {
+        if (slug) {
+            dispatch(fetchUserProgress(slug));
         }
-    };
+    }, [dispatch, slug]);
 
+    const id = progress?.currentDay?._id;
+
+    useEffect(() => {
+        const fetchDailyLessons = async () => {
+            try {
+                const response = await getDailyLesson(id);
+                const lessonId = response.data[0]._id;
+                setLessons(response.data);
+                if (lessonId) {
+                    const response = await getInteractiveExercise(lessonId);
+                    setInteractiveExercise(response.data);
+                }
+            } catch (error) {
+                console.error('Error fetching daily lessons:', error);
+            }
+        }
+        if (id) {
+            fetchDailyLessons();
+        }
+    }, [id]);
+
+    const { phase, week, day } = useParams();
 
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4">
-            <h1 className="text-3xl font-bold mb-4">Text to Speech</h1>
-            <textarea
-                className="w-full max-w-lg p-2 border border-gray-300 rounded mb-4"
-                placeholder={text}
-            />
-            <div className="flex space-x-4">
-                <p className='text-2xl text-black'>{text}</p>
-                <Button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={handleGenerateAudio}>
-                    Submit
-                </Button>
+        <div className="min-h-screen bg-gray-100 p-4">
+            <div className="max-w-3xl mx-auto bg-white p-6 rounded shadow-md">
+                <h1 className="text-2xl font-bold mb-4">Day Details</h1>
+                {lessons.length > 0 && (
+                    <div >
+                        <h2 className="text-xl font-semibold mb-2">{lessons[0].mainTopic}</h2>
+                        <div className="mb-4">
+                            <h3 className="text-lg font-medium">Grammar Topic</h3>
+                            <p className="text-gray-700">{lessons[0].grammarTopic.explanation}</p>
+                            <ul className="list-disc list-inside">
+                                {lessons[0].grammarTopic.examples.map((example, index) => (
+                                    <li key={index} className="text-gray-700">{example}</li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div className="mb-4">
+                            <h3 className="text-lg font-medium">Vocabulary Topic</h3>
+                            <p className="text-gray-700">{lessons[0].vocabularyTopic.explanation}</p>
+                            <ul className="list-disc list-inside">
+                                {lessons[0].vocabularyTopic.examples.map((example, index) => (
+                                    <li key={index} className="text-gray-700">{example}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                )}
+                <div className="mt-6">
+                    <h1 className="text-3xl font-bold mb-4">Inter active Exercise</h1>
+                    <InterActive interactiveExercise={interactiveExercise} />
+                </div>
             </div>
-            {audioSrc && (
-                <audio className="mt-4" src={audioSrc} controls />
-            )}
         </div>
     );
 };

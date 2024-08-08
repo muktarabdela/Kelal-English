@@ -94,7 +94,7 @@ const WeekDetailsPage = () => {
             <h1 className="text-3xl text-center font-semibold mb-4">Week {week} Details</h1>
             <div className="grid grid-cols-2 gap-6">
                 {data.days.map((day) => {
-                    const isLocked = day.dayNumber > userData?.currentDay.currentDay;
+                    const isLocked = day.dayNumber > userData?.currentDay.dayNumber;
 
                     return (
 

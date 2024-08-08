@@ -1,6 +1,6 @@
 "use client";
 import { useLayoutEffect } from 'react';
-import Phases from '@/components/Phases'
+import Phases from '@/components/learn/Phases'
 import { redirect } from 'next/navigation';
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux';
