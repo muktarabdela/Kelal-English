@@ -13,7 +13,7 @@ const Sidebar = () => {
     return (
         <div
             className={cn(
-                "left-0 top-[7.8em] flex h-full flex-col border-r-2 px-4 lg:fixed w-[14em] shadow-lg",
+                "left-0 top-[7.8em] flex h-full flex-col border-r-2 px-4 lg:fixed w-[14em] shadow-lg lg:mt-0 mt-10",
             )}
         >
             <div className="flex flex-1 flex-col gap-y-2">

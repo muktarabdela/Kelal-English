@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setIsAuthenticated, setIsSubscribed, setUser } from "@/store/UiSlice";
 import { fetchUserData } from "@/store/UserSlice";
 import { useRouter } from "next/navigation";
+import MobileSidebar from "@/components/MobileSidebar";
 
 const MainLayout = ({ children }) => {
     const dispatch = useDispatch();
@@ -52,7 +53,7 @@ const MainLayout = ({ children }) => {
 
     return (
         <main className="min-h-screen flex flex-col bg-[#f5f5f5]">
-            <div className="fixed top-0 z-50 h-[5em] w-full items-center p-2">
+            <div className="fixed top-0 z-50 h-[5em] w-full items-center p-">
                 <Header />
             </div>
             <div className="flex flex-grow mt-[7em] w-full">
