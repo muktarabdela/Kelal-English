@@ -6,7 +6,7 @@ import Sidebar from "./Sidebar";
 
 function MobileSidebar() {
     return (
-        <nav className="fixed top-5 right-[2px] z-50 flex h-[50px] w-full items-center px-4 ">
+        <nav className="fixed to-5 right-[2px] z-50 flex h-[50px] w-full items-center px-4 ">
 
             <Sheet>
                 <SheetTrigger>

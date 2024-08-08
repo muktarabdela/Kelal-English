@@ -53,7 +53,7 @@ const MainLayout = ({ children }) => {
 
     return (
         <main className="min-h-screen flex flex-col bg-[#f5f5f5]">
-            <div className="fixed top-0 z-50 h-[5em] w-full items-center p-">
+            <div className="fixed top-0 z-50 h-[5em] w-full items-center ">
                 <Header />
             </div>
             <div className="flex flex-grow mt-[7em] w-full">
